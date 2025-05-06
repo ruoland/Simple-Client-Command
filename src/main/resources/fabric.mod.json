@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "id": "simplecamera",
+  "version": "${version}",
+  "name": "SimpleCamera",
+  "description": "",
+  "authors": [],
+  "contact": {},
+  "license": "All-Rights-Reserved",
+  "icon": "assets/simplecamera/icon.png",
+  "environment": "*",
+  "entrypoints": {
+
+    "client": [
+      "org.land.simplecamera.client.SimpleCameraClient"
+    ],
+    "main": [
+      "org.land.simplecamera.SimpleCamera"
+    ],
+    "cardinal-components:static-init": [
+      "org.land.simplecamera.feature.cca.SimpleStaticComponents"
+    ],
+    "cardinal-components-entity": [
+      "org.land.simplecamera.feature.cca.SimpleComponents"
+    ]
+  },
+  "mixins": [
+    "simplecamera.mixins.json",
+    {
+      "config": "simplecamera.client.mixins.json",
+      "environment": "client"
+    }
+  ],
+  "depends": {
+    "fabricloader": ">=${loader_version}",
+    "fabric": "*",
+    "minecraft": "${minecraft_version}",
+    "cardinal-components-base": ">=6.1.2",
+    "cardinal-components-entity": ">=6.1.2"
+  }
+}
