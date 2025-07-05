@@ -1,4 +1,4 @@
-package org.land.simplecamera.feature.cca.camera;
+package org.land.simplecamera.feature.cca.camera.settings;
 
 import net.minecraft.nbt.NbtCompound;
 import org.land.simplecamera.feature.client.camera.EnumPlacement;
@@ -15,7 +15,7 @@ public class CommonSettings {
     private float lastPlayerYaw = 0; // Relative 초기화 기준용
     private float lastPlayerPitch = 0; // Relative 초기화 기준용
 
-    private Perspective perspective = Perspective.FIRST_PERSON;
+    private Perspective perspective = Perspective.RESET;
     private boolean shouldUpdate = false;
     // Default constructor needed for NBT/Gson
     public CommonSettings() {}

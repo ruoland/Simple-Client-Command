@@ -1,4 +1,4 @@
-package org.land.simplecamera.feature.cca.control;
+package org.land.simplecamera.feature.cca.control.settings;
 
 import net.minecraft.nbt.NbtCompound;
 

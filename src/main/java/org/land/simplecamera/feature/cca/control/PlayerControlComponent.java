@@ -1,10 +1,11 @@
-package org.land.simplecamera.feature.cca;
+package org.land.simplecamera.feature.cca.control;
 
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.registry.RegistryWrapper;
 import org.ladysnake.cca.api.v3.component.sync.AutoSyncedComponent;
-import org.land.simplecamera.feature.cca.control.ControlSettings;
+import org.land.simplecamera.feature.cca.SimpleComponents;
+import org.land.simplecamera.feature.cca.control.settings.ControlSettings;
 
 public class PlayerControlComponent implements AutoSyncedComponent, ControlComponent{
 

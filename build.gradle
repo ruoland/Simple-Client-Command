@@ -63,7 +63,10 @@ dependencies {
     modImplementation "org.ladysnake.cardinal-components-api:cardinal-components-base:${cca_version}"
 
     modImplementation "org.ladysnake.cardinal-components-api:cardinal-components-entity:${cca_version}"
-
+    modImplementation "org.ladysnake.cardinal-components-api:cardinal-components-world:${cca_version}"
+    include "org.ladysnake.cardinal-components-api:cardinal-components-base:${cca_version}"
+    include "org.ladysnake.cardinal-components-api:cardinal-components-entity:${cca_version}"
+    include "org.ladysnake.cardinal-components-api:cardinal-components-world:${cca_version}"
 }
 
 processResources {

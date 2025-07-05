@@ -1,4 +1,4 @@
-package org.land.simplecamera.feature.cca.camera;
+package org.land.simplecamera.feature.cca.camera.settings;
 
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.math.Vec3d;

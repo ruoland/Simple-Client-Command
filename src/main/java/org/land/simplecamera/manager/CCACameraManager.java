@@ -8,13 +8,12 @@ import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.util.WorldSavePath;
 import net.minecraft.util.math.Vec3d;
 import org.joml.Vector3f;
-import org.land.simplecamera.feature.cca.CameraComponent;
-import org.land.simplecamera.feature.cca.ControlComponent;
+import org.land.simplecamera.feature.cca.camera.CameraComponent;
 import org.land.simplecamera.feature.cca.SimpleComponents;
-import org.land.simplecamera.feature.cca.camera.AbsoluteSettings;
-import org.land.simplecamera.feature.cca.camera.CommonSettings;
-import org.land.simplecamera.feature.cca.camera.RelativeSettings;
-import org.land.simplecamera.feature.cca.control.ControlSettings;
+import org.land.simplecamera.feature.cca.camera.settings.AbsoluteSettings;
+import org.land.simplecamera.feature.cca.camera.settings.CommonSettings;
+import org.land.simplecamera.feature.cca.camera.settings.RelativeSettings;
+import org.land.simplecamera.feature.cca.control.settings.ControlSettings;
 import org.land.simplecamera.feature.client.camera.EnumPlacement;
 import org.land.simplecamera.feature.client.camera.EnumResetType;
 
@@ -32,7 +31,8 @@ public class CCACameraManager {
     private static final Logger LOGGER = LoggerFactory.getLogger(CCACameraManager.class);
     private static final String PROFILE_FOLDER = "simplecamera/profiles"; // 프로필 저장 폴더
     public static void handlePerspective(PlayerEntity player, Perspective type) {
-        getCameraComponent(player).getCommonSettings().setPerspective(type);
+        getCommonSettings(player).setPerspective(type);
+        getCameraComponent(player).sync();
     }
     public static void handleReset(PlayerEntity player, EnumResetType type){
         switch (type) {
@@ -44,6 +44,8 @@ public class CCACameraManager {
                 // 초기화 시 마지막 플레이어 방향도 기본값으로 설정
                 getCommonSettings(player).setLastPlayerYaw(0);
                 getCommonSettings(player).setLastPlayerPitch(0);
+                getCommonSettings(player).setPerspective(Perspective.RESET);
+                getControlComponent(player).setMouseRotationLocked(false);
                 break;
 
             case RESET_FOLLOW_STYLE:
@@ -55,7 +57,8 @@ public class CCACameraManager {
                 getControlComponent(player).setPlayerYaw(0); // KeyboardManager 회전 목표 초기화
                 getControlComponent(player).setPlayerPitch(0); // KeyboardManager 회전 목표 초기화
                 getCommonSettings(player).setShouldUpdate(true); // 업데이트 필요
-                LOGGER.debug("Camera RESET_FOLLOW_STYLE received. Resetting follow settings, mouse lock, and player rotation target.");
+                getCommonSettings(player).setPerspective(Perspective.RESET);
+                LOGGER.debug("Camera RESET_FOLLOW_STYLE received. Resetting follow relativeSettings, mouse lock, and player rotation target.");
                 break;
 
             case RESET_POS:
@@ -89,7 +92,7 @@ public class CCACameraManager {
                 getControlComponent(player).setPlayerYaw(0); // KeyboardManager 회전 목표 초기화
                 getControlComponent(player).setPlayerPitch(0); // KeyboardManager 회전 목표 초기화
                 getCommonSettings(player).setShouldUpdate(true); // 회전 변경 시 업데이트 필요 알림
-                LOGGER.debug("Camera RESET_ROTATION received. Resetting camera rotation settings, mouse lock, and player rotation target.");
+                LOGGER.debug("Camera RESET_ROTATION received. Resetting camera rotation relativeSettings, mouse lock, and player rotation target.");
                 break;
         }
 
@@ -102,12 +105,12 @@ public class CCACameraManager {
     // CameraFollowPayload 핸들러 등록에서 호출됨
     public static void handleFollowStyle(PlayerEntity player, boolean isEnable, EnumMoveStyle moveStyle) {
         CommonSettings commonSettings =  getCommonSettings(player);
-        RelativeSettings settings = getRelativeSettings(player);;
+        RelativeSettings relativeSettings = getRelativeSettings(player);;
         if (isEnable) { // follow 활성화 (forward, sideways, none 포함)
             commonSettings.setPlacementType(EnumPlacement.RELATIVE); // follow는 Relative PlacementType
 
             // MoveStyle 설정
-            settings.setMoveStyle(moveStyle);
+            relativeSettings.setMoveStyle(moveStyle);
 
             // 플레이어의 현재 Yaw/Pitch 값을 가져옴 (이 값을 카메라 고정 또는 KM 목표로 사용)
             float currentPlayerYaw = player != null ? player.getYaw() : 0;
@@ -130,21 +133,22 @@ public class CCACameraManager {
             getControlComponent(player).setPlayerPitch(currentPlayerPitch);
             // follow 활성화 시 기본 오프셋 설정 (원하는 값으로) 및 초기화 플래그 설정
             // 0, 2, -3 은 플레이어 뒤쪽 약간 위 (follow locked rotation 모드에 적합한 기본 오프셋)
-            settings.setOffset(0, 2, -3); // 오프셋 초기값 설정
-            settings.setMoveStyleUpdate(true); // Relative 모드 초기화 트리거 (MoveStyle 변경 등)
+            relativeSettings.setOffset(0, 2, -3); // 오프셋 초기값 설정
+            relativeSettings.setMoveStyleUpdate(true); // Relative 모드 초기화 트리거 (MoveStyle 변경 등)
             commonSettings.setShouldUpdate(true); // CameraMixin.update에서 초기화 트리거 (PlacementType 변경 등)
+            commonSettings.setPerspective(Perspective.THIRD_PERSON_BACK);
 
         } else { // follow 비활성화 (CameraFollowPayload enable=false)
             // 이 부분은 RESET_FOLLOW_STYLE 명령과 동일하게 처리
-            settings.setMoveStyle(EnumMoveStyle.ALL);
+            relativeSettings.setMoveStyle(EnumMoveStyle.ALL);
             commonSettings.setRotationStyle(RotationStyle.PLAYER_CONTROLLED);
             commonSettings.setPlacementType(EnumPlacement.NONE);
             getControlComponent(player).setMouseRotationLocked(false);
             getControlComponent(player).setPlayerYaw(0); // KeyboardManager 회전 목표 초기화
             getControlComponent(player).setPlayerPitch(0); // KeyboardManager 회전 목표 초기화
-            settings.setMoveStyleUpdate(true);
+            relativeSettings.setMoveStyleUpdate(true);
             commonSettings.setShouldUpdate(true); // 업데이트 필요
-            LOGGER.debug("FOLLOW enable=false received. Resetting follow settings, mouse lock, and player rotation target.");
+            LOGGER.debug("FOLLOW enable=false received. Resetting follow relativeSettings, mouse lock, and player rotation target.");
         }
         SimpleComponents.getCameraDataKey().sync(player);
         SimpleComponents.getControlDataKey().sync(player);
@@ -263,6 +267,7 @@ public class CCACameraManager {
         CommonSettings commonSettings = getCameraComponent(player).getCommonSettings();
         commonSettings.setPlacementType(EnumPlacement.ABSOLUTE);
 
+        commonSettings.setPerspective(Perspective.THIRD_PERSON_BACK);
         if (isAdd) { // add
             Vec3d currentPosition = absoluteSettings.getPosition();
             Vec3d newPosition = currentPosition.add(vec3d);
@@ -303,7 +308,7 @@ public class CCACameraManager {
     // === 프로필 저장/불러오기 핸들러 추가 ===
     public static boolean savePlayerSettings(PlayerEntity player, String profileName) {
         if (player == null || player.getServer() == null) {
-            LOGGER.warn("Attempted to save settings for null player or server.");
+            LOGGER.warn("Attempted to save relativeSettings for null player or server.");
             return false;
         }
         Path saveDirectory = player.getServer().getSavePath(WorldSavePath.ROOT).resolve(PROFILE_FOLDER);

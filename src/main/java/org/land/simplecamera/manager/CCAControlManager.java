@@ -2,9 +2,9 @@ package org.land.simplecamera.manager;
 
 import net.minecraft.entity.player.PlayerEntity;
 import org.jetbrains.annotations.NotNull;
-import org.land.simplecamera.feature.cca.ControlComponent;
+import org.land.simplecamera.feature.cca.control.ControlComponent;
 import org.land.simplecamera.feature.cca.SimpleComponents;
-import org.land.simplecamera.feature.cca.control.ControlSettings;
+import org.land.simplecamera.feature.cca.control.settings.ControlSettings;
 import org.land.simplecamera.feature.client.control.EnumMoveStyle;
 
 public class CCAControlManager {

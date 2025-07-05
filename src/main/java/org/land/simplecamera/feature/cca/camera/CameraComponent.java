@@ -1,8 +1,10 @@
-package org.land.simplecamera.feature.cca;
+package org.land.simplecamera.feature.cca.camera;
 
 import org.ladysnake.cca.api.v3.component.Component;
 import org.ladysnake.cca.api.v3.entity.RespawnableComponent;
-import org.land.simplecamera.feature.cca.camera.*;
+import org.land.simplecamera.feature.cca.camera.settings.AbsoluteSettings;
+import org.land.simplecamera.feature.cca.camera.settings.CommonSettings;
+import org.land.simplecamera.feature.cca.camera.settings.RelativeSettings;
 
 public interface CameraComponent extends Component, RespawnableComponent<PlayerCameraComponent> {
     CommonSettings getCommonSettings();

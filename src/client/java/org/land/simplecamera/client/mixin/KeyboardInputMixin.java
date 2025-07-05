@@ -4,7 +4,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.input.KeyboardInput;
 
 import org.land.simplecamera.feature.cca.SimpleComponents;
-import org.land.simplecamera.feature.cca.control.ControlSettings;
+import org.land.simplecamera.feature.cca.control.settings.ControlSettings;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -15,7 +15,7 @@ public class KeyboardInputMixin {
 
     @Inject(method = "tick", at = @At("TAIL"))
     private void onTick(CallbackInfo ci) {
-        ControlSettings controlSettings = SimpleComponents.getControlDataKey().get(MinecraftClient.getInstance().player).getControlSettings();
+        ControlSettings controlSettings = SimpleComponents.getControlDataKey().get(MinecraftClient.getInstance().player != null ? MinecraftClient.getInstance().player : null).getControlSettings();
         if (controlSettings.isDisableMoveSideways()) {
             KeyboardInput input = (KeyboardInput) (Object) this;
             input.movementSideways = 0; // 좌우 이동 취소

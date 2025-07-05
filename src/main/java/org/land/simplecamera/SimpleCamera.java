@@ -9,9 +9,11 @@ import org.land.simplecamera.common.command.argument.PlayerRotationArgumentType;
 import org.land.simplecamera.common.command.argument.PlayerYawPitchArgumentType;
 import org.land.simplecamera.feature.client.camera.commands.CameraCommands;
 import org.land.simplecamera.feature.client.control.command.ControlCommands;
+import org.land.simplecamera.feature.client.control.command.KeybindCommands;
+import org.land.simplecamera.feature.client.control.command.UtilCommands;
 
 public class SimpleCamera implements ModInitializer {
-
+    
     public static final String MOD_ID = "simplecamera";
     @Override
     public void onInitialize() {
@@ -19,6 +21,9 @@ public class SimpleCamera implements ModInitializer {
 
         ControlCommands.init();
 
+        //KeybindCommands.init();
+
+        UtilCommands.init();
         etc();
     }
 

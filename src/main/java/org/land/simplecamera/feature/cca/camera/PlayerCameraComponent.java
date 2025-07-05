@@ -1,13 +1,13 @@
-package org.land.simplecamera.feature.cca;
+package org.land.simplecamera.feature.cca.camera;
 
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.network.RegistryByteBuf;
 import net.minecraft.registry.RegistryWrapper;
-import net.minecraft.server.network.ServerPlayerEntity;
 import org.ladysnake.cca.api.v3.component.sync.AutoSyncedComponent;
-import org.land.simplecamera.feature.cca.camera.CommonSettings;
-import org.land.simplecamera.feature.cca.camera.*;
+import org.land.simplecamera.feature.cca.SimpleComponents;
+import org.land.simplecamera.feature.cca.camera.settings.AbsoluteSettings;
+import org.land.simplecamera.feature.cca.camera.settings.CommonSettings;
+import org.land.simplecamera.feature.cca.camera.settings.RelativeSettings;
 
 public class PlayerCameraComponent implements AutoSyncedComponent, CameraComponent {
 

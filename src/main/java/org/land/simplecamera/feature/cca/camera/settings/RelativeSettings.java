@@ -1,8 +1,7 @@
-package org.land.simplecamera.feature.cca.camera;
+package org.land.simplecamera.feature.cca.camera.settings;
 
 
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtHelper; // NBT Helper 추가
 import net.minecraft.util.math.Vec3d;
 import org.land.simplecamera.feature.client.control.EnumMoveStyle;
 
